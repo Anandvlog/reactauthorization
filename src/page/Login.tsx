@@ -2,6 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import * as yup from "yup";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import {  useNavigate } from "react-router-dom";
 
 type Inputs = {
   email: string;
@@ -20,7 +21,7 @@ const LoginPage = () => {
     import.meta.env.VITE_API_URL
       ? `${import.meta.env.VITE_API_URL}/auth/login`
       : "https://api.escuelajs.co/api/v1/auth/login";
-
+const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -37,7 +38,7 @@ const LoginPage = () => {
       const res = await axios.post(apiUrl, data);
       localStorage.setItem("token", JSON.stringify(res.data.access_token));
 
-
+      navigate("/profile");
       alert("Login Successful");
       reset();
     } catch (error) {
@@ -57,13 +58,15 @@ const LoginPage = () => {
 
         {/* Email */}
         <div className="mb-4">
+          <div className="flex items-baseline gap-1 mb-1">  
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="email"
           >
             Email
           </label>
-
+          <span className="text-red-500">*</span>
+          </div>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="email"
@@ -81,12 +84,15 @@ const LoginPage = () => {
 
         {/* Password */}
         <div className="mb-6">
+          <div className="flex items-baseline gap-1 mb-1">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="password"
           >
             Password
           </label>
+          <span className="text-red-500">*</span>
+          </div>
 
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-2 leading-tight focus:outline-none focus:shadow-outline"
@@ -106,7 +112,7 @@ const LoginPage = () => {
         {/* Button */}
         <div className="flex items-center justify-between">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+            className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
             type="submit"
           >
             Sign In
