@@ -1,11 +1,20 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import React from "react";
+import * as yup from "yup";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 type Inputs = {
   email: string;
   password: string;
 };
+
+const schema = yup
+  .object({
+    email: yup.string().email().required("Email is required"),
+    password: yup.string().min(6).required("Password is required"),
+  })
+  .required() 
 
 const LoginPage = () => {
   const apiUrl =
@@ -19,6 +28,7 @@ const LoginPage = () => {
     reset,
     formState: { errors },
   } = useForm<Inputs>({
+    resolver: yupResolver(schema),
      mode: "all",
   });
 
