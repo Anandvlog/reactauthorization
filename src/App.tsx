@@ -6,8 +6,8 @@ function App() {
 
   return (
     <>
-      <LoginPage />
       <Profile />
+      <LoginPage />
     </>
   )
 }

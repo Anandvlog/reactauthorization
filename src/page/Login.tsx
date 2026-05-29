@@ -1,6 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import React from "react";
 import * as yup from "yup";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
@@ -33,13 +32,11 @@ const LoginPage = () => {
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log("payload", data);
 
     try {
       const res = await axios.post(apiUrl, data);
       localStorage.setItem("token", JSON.stringify(res.data.access_token));
 
-      console.log("response", res.data);
 
       alert("Login Successful");
       reset();
