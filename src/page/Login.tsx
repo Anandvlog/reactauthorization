@@ -2,43 +2,40 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import * as yup from "yup";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import {  useNavigate } from "react-router-dom";
-
-type Inputs = {
-  email: string;
-  password: string;
-};
+import { useNavigate } from "react-router-dom";
 
 const schema = yup
   .object({
     email: yup.string().email().required("Email is required"),
     password: yup.string().min(6).required("Password is required"),
   })
-  .required() 
+  .required();
 
-const LoginPage = () => {
+type FormData = yup.InferType<typeof schema>;
+
+const LoginPage = ({ onLogin }: { onLogin: () => void }) => {
   const apiUrl =
     import.meta.env.VITE_API_URL
       ? `${import.meta.env.VITE_API_URL}/auth/login`
       : "https://api.escuelajs.co/api/v1/auth/login";
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<Inputs>({
+  } = useForm<FormData>({
     resolver: yupResolver(schema),
-     mode: "all",
+    mode: "all",
   });
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
 
     try {
       const res = await axios.post(apiUrl, data);
       localStorage.setItem("token", JSON.stringify(res.data.access_token));
-
-      navigate("/profile");
+      onLogin();
+      navigate("/");
       alert("Login Successful");
       reset();
     } catch (error) {
@@ -58,14 +55,14 @@ const navigate = useNavigate();
 
         {/* Email */}
         <div className="mb-4">
-          <div className="flex items-baseline gap-1 mb-1">  
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="email"
-          >
-            Email
-          </label>
-          <span className="text-red-500">*</span>
+          <div className="flex items-baseline gap-1 mb-1">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="email"
+            >
+              Email
+            </label>
+            <span className="text-red-500">*</span>
           </div>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -85,13 +82,13 @@ const navigate = useNavigate();
         {/* Password */}
         <div className="mb-6">
           <div className="flex items-baseline gap-1 mb-1">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="password"
-          >
-            Password
-          </label>
-          <span className="text-red-500">*</span>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
+            >
+              Password
+            </label>
+            <span className="text-red-500">*</span>
           </div>
 
           <input

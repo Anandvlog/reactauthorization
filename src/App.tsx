@@ -4,23 +4,35 @@ import Profile from './components/profile'
 import Header from './components/header'
 import { Route, Routes } from 'react-router-dom'
 import { useState } from 'react'
+import Home from './page/Home'
 
 function App() {
-        const [user, setUser] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(!!localStorage.getItem("token"));
 
-  
-    return (
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
+
+  return (
     <>
-    {localStorage.getItem("token") && 
-    <LoginPage />
-  }
-  <Header setUser={setUser}  user={user}/>
-    <Routes>
-      <Route path="/profile" element={<Profile user={user}  />} />
-    </Routes>
-      
+      {!isLoggedIn ? (
+        <LoginPage onLogin={handleLogin} />
+      ) : (
+        <>
+          <Header onLogout={handleLogout} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </>
+      )}
     </>
   )
 }
 
 export default App
+

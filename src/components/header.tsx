@@ -1,33 +1,11 @@
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-const Header = ({ setUser}) => {
+const Header = ({ onLogout }: { onLogout: () => void }) => {
   const navigate = useNavigate();
-  const profileUrl = import.meta.env.VITE_API_URL
-    ? `${import.meta.env.VITE_API_URL}/auth/profile`
-    : "https://api.escuelajs.co/api/v1/auth/profile";
-
-  const getProfileData = async () => {
-    const token = JSON.parse(localStorage.getItem("token") || "null");
-
-    const header = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    try {
-      const res = await axios.get(profileUrl, header);
-      setUser(res.data);
-    } catch (error) {
-      alert("you are not authorized to access this resource");
-      console.log("error", error);
-    }
-  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setUser(null);
+    onLogout();
     alert("Logged out successfully");
     navigate("/");
   };
@@ -46,12 +24,9 @@ const Header = ({ setUser}) => {
               </Link>
             </li>
             <li>
-              <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer"
-                    onClick={getProfileData}
-                    >
-                    Get Profile
-        </button>
+              <Link to="/profile" className="hover:text-gray-300">
+                Profile
+              </Link>
             </li>
             <li>
               <button
