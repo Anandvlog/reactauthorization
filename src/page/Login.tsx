@@ -27,6 +27,7 @@ const LoginPage = () => {
 
     try {
       const res = await axios.post(apiUrl, data);
+      localStorage.setItem("token", JSON.stringify(res.data.access_token));
 
       console.log("response", res.data);
 
